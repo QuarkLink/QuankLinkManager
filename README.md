@@ -12,3 +12,6 @@ TODO:
 - 前端
 - 后端（先了解项目组织结构，之后可以考虑先从config开始实现）
 
+openapi 可视化方法
+- vscode 插件 swagger viewer
+- [在线 editor](https://editor.swagger.io/)
