@@ -1,6 +1,4 @@
-'''QuankLinkManager'''
-
-module(name = "QuankLinkManager")
+bazel_dep(name = "googletest", version = "1.17.0")
 
 # Hedron's Compile Commands Extractor for Bazel
 # https://github.com/hedronvision/bazel-compile-commands-extractor
