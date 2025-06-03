@@ -18,7 +18,7 @@ jobs:
 
     - name: 检查代码格式
       run: |
-        find app -name "*.cc" -o -name "*.cpp" -o -name "*.cxx" -o -name "*.h" -o -name "*.hpp" -o -name "*.hxx" | xargs clang-format --dry-run --Werror
+        find QuankLinkManager -name "*.cc" -o -name "*.cpp" -o -name "*.cxx" -o -name "*.h" -o -name "*.hpp" -o -name "*.hxx" | xargs clang-format --dry-run --Werror
 
     - name: 生成编译数据库
       run: |
@@ -26,7 +26,7 @@ jobs:
 
     - name: 运行静态分析
       run: |
-        find app -name "*.cc" -o -name "*.cpp" -o -name "*.cxx" -o -name "*.h" -o -name "*.hpp" -o -name "*.hxx" | xargs clang-tidy -p . --warnings-as-errors="*"
+        find QuankLinkManager -name "*.cc" -o -name "*.cpp" -o -name "*.cxx" -o -name "*.h" -o -name "*.hpp" -o -name "*.hxx" | xargs clang-tidy -p . --warnings-as-errors="*"
 
   build-test-coverage:
     name: 构建、测试和覆盖率
@@ -39,15 +39,15 @@ jobs:
 
     - name: 构建项目
       run: |
-        bazel build //app:main
+        bazel build //QuankLinkManager:main
 
     - name: 运行单元测试
       run: |
-        bazel test //app/... --test_output=all
+        bazel test //QuankLinkManager/... --test_output=all
 
     - name: 生成覆盖率报告
       run: |
-        bazel coverage //app/... --combined_report=lcov
+        bazel coverage //QuankLinkManager/... --combined_report=lcov
 
     - name: 上传覆盖率到Codecov
       uses: codecov/codecov-action@v5
