@@ -1,6 +1,8 @@
 #include <iostream>
 
+#include "QuankLinkManager/config/config.h"
+
 int main() {
-  std::cout << "Hello, World!" << std::endl;
+  std::cout << quanklinkmanager::config::hello() << std::endl;
   return 0;
 }
