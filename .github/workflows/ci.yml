@@ -1,0 +1,60 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  code-quality:
+    name: 代码质量检查
+    runs-on: ubuntu-22.04
+    container:
+      image: ghcr.io/quarklink/images/cpp-bazel-ci:1.0.0
+    steps:
+    - name: Checkout代码
+      uses: actions/checkout@v4
+
+    - name: 检查代码格式
+      run: |
+        find QuankLinkManager -name "*.cc" -o -name "*.cpp" -o -name "*.cxx" -o -name "*.h" -o -name "*.hpp" -o -name "*.hxx" | xargs clang-format --dry-run --Werror
+
+    - name: 生成编译数据库
+      run: |
+        bazel run @hedron_compile_commands//:refresh_all
+
+    - name: 运行静态分析
+      run: |
+        find QuankLinkManager -name "*.cc" -o -name "*.cpp" -o -name "*.cxx" -o -name "*.h" -o -name "*.hpp" -o -name "*.hxx" | xargs clang-tidy -p . --warnings-as-errors="*"
+
+  build-test-coverage:
+    name: 构建、测试和覆盖率
+    runs-on: ubuntu-22.04
+    container:
+      image: ghcr.io/quarklink/images/cpp-bazel-ci:1.0.0
+    steps:
+    - name: Checkout代码
+      uses: actions/checkout@v4
+
+    - name: 构建项目
+      run: |
+        bazel build //QuankLinkManager:main
+
+    - name: 运行单元测试
+      run: |
+        bazel test //QuankLinkManager/... --test_output=all
+
+    - name: 生成覆盖率报告
+      run: |
+        bazel coverage //QuankLinkManager/... --combined_report=lcov
+
+    - name: 上传覆盖率到Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./bazel-out/_coverage/_coverage_report.dat
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: true
+        verbose: true
