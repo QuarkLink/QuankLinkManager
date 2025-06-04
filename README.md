@@ -1,7 +1,7 @@
 # QuankLinkManager 短链接管理系统
 
 ## 项目简介
-QuankLinkManager 是一个高性能的短链接管理系统，提供链接缩短、访问统计、用户管理等功能。
+QuankLinkManager 是一个短链接管理系统，提供链接缩短、访问统计等功能。
 
 ## 外部依赖
 - MySQL: boost.mysql
@@ -12,7 +12,7 @@ QuankLinkManager 是一个高性能的短链接管理系统，提供链接缩短
 ## 项目结构
 ```
 QuankLinkManager/
-├── config    # 配置文件
+├── config    # 解析配置文件
 ├── main.cc
 ├── metrics   # 监控指标
 ├── router    # 请求分发
@@ -25,26 +25,24 @@ QuankLinkManager/
 ### 目录说明
 
 1. **config/**
-   - 负责管理项目配置
-   - 包含数据库连接信息、服务端口等配置项
-   - 支持配置热加载
+   - 负责解析配置文件，
+   - 负责向其他组件提供配置信息
 
 2. **metrics/**
    - 实现系统监控指标收集
    - 包含QPS、响应时间、错误率等指标
-   - 支持Prometheus格式导出
 
 3. **router/**
    - 处理HTTP请求路由
    - 请求参数验证和预处理
+   - 限流和鉴权
 
 4. **service/**
    - 实现核心业务逻辑
-   - link/: 短链接生成、解析、统计等功能
-   - user/: 用户管理、认证授权等功能
+   - 短链接生成、解析、统计等功能
 
 5. **storage/**
-   - 数据持久化层
+   - 数据持久化层，抽象mysql和redis方法，向上提供统一的存储接口，外界不需要关心mysql和redis的处理细节
    - mysql/: 数据库操作封装
    - redis/: 缓存操作封装
 
